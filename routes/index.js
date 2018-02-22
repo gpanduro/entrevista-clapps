@@ -11,3 +11,5 @@ api.put('/product',ProductCrtl.updateStock)
 api.delete('/product/:productId',ProductCrtl.deleteProduct)
 api.get('/products/sinstock',ProductCrtl.getProductSinStock)
 api.get('/products',ProductCrtl.getProductConStockOrdenado)
+
+module.exports=api

@@ -2,19 +2,11 @@
 
 const express = require ('express')
 const bodyParser = require ('body-parser')
-
 const app = express()
-const ProductCrtl=require('./controllers/product')
+const api = require('./routes')
 
 app.use(bodyParser.urlencoded({ extended:false}))
 app.use(bodyParser.json())
-
-app.get('/api/product/:productId',ProductCrtl.getProduct)
-app.post('/api/product',ProductCrtl.saveProduct)
-app.put('/api/product/:productId',ProductCrtl.updateProduct)
-app.put('/api/product',ProductCrtl.updateStock)
-app.delete('/api/product/:productId',ProductCrtl.deleteProduct)
-app.get('/api/products/sinstock',ProductCrtl.getProductSinStock)
-app.get('/api/products',ProductCrtl.getProductConStockOrdenado)
+app.use('/api',api)
 
 module.exports = app
