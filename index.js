@@ -48,7 +48,14 @@ app.post('/api/product',(req,res)=>{
 })
 
 app.put('/api/product/:productId',(req,res)=>{
+    let productId = req.params.productId
+    let update = req.body
+    
+    Product.findByIdAndUpdate(productId,update,(err,producUpdated)=>{
+        if(err) res.status(500).send({message:`Error al actualizar producto de la BD ${err}`})
 
+        res.status(200).send({product: producUpdated})
+    })
 })
 
 app.delete('/api/product/:productId',(req,res)=>{
