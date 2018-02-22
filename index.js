@@ -12,10 +12,24 @@ app.use(bodyParser.urlencoded({ extended:false}))
 app.use(bodyParser.json())
 
 app.get('/api/product',(req,red)=>{
-    res.status(200).send({products:[]})
+    Product.find({},(err,products)=>{
+        if(err) return res.status(500).send({message: 'error al realziar la peticion'})
+        if(!product) return res.status(404).send({message: 'no existen los productos'})
+
+        res.status(200).send({products})
+
+    })
 })
 
-app.get('/api/product/:producId',(req,res)=>{
+app.get('/api/product/:productId',(req,res)=>{
+    let productId = req.params.productId
+    
+    Product.findById(productId,(err,product)=>{
+        if(err) return res.status(500).send({message: 'error al realziar la peticion'})
+        if(!product) return res.status(404).send({message: 'el producto no existe'})
+
+        res.status(200).send({product})
+    })
 
 })
 
