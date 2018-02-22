@@ -11,18 +11,7 @@ const port = process.env.PORT || 3000
 app.use(bodyParser.urlencoded({ extended:false}))
 app.use(bodyParser.json())
 
-
 //GET
-app.get('/api/product',(req,res)=>{
-    Product.find({},(err,products)=>{
-        if(err) return res.status(500).send({message: `error al realziar la peticion${err}`})
-        if(!products) return res.status(404).send({message: 'no existen los productos'})
-
-        res.status(200).send({products})
-
-    })
-})
-
 app.get('/api/product/:productId',(req,res)=>{
     let productId = req.params.productId
     
@@ -32,7 +21,6 @@ app.get('/api/product/:productId',(req,res)=>{
 
         res.status(200).send({product})
     })
-
 })
 
 //POST
@@ -62,6 +50,21 @@ app.put('/api/product/:productId',(req,res)=>{
     })
 })
 
+//PUT
+app.put('/api/product', (req, res)=>{
+    const  id = req.query.id;
+    const increment = JSON.parse(req.query.increment);
+    let modifyStock = null;
+
+    increment ? modifyStock = 1 : modifyStock = -1;
+
+    Product.update({_id: id}, {$inc: { stock: modifyStock }}, (err, producUpdated)=>{
+        if(err) res.status(500).send({message:`Error al actualizar stock del producto de la BD ${err}`})
+
+        res.status(200).send({product: producUpdated})
+    });
+});
+
 //DELETE
 app.delete('/api/product/:productId',(req,res)=>{
     let productId=req.params.productId 
@@ -75,6 +78,36 @@ app.delete('/api/product/:productId',(req,res)=>{
         res.status(200).send({message:'el producto fue eliminado'})
     })
 })
+
+//GET
+app.get('/api/products/sinstock',(req,res)=>{
+    
+    Product.find({stock:{$eq: 0}},(err,products)=>{
+        if(err) return res.status(500).send({message: `error al realziar la peticion${err}`})
+        if(!products) return res.status(404).send({message: 'no existen los productos'})
+        res.status(200).send({products})
+    });
+});
+
+//GET
+app.get('/api/products',(req,res)=>{
+    const sortCriteria = req.query.criteria;
+
+    if(sortCriteria){
+        Product.find({stock:{$gt: 0}}).sort({ stock: sortCriteria }).exec((err, products)=>{
+            if(err) return res.status(500).send({message: `error al realizar la peticion${err}`})
+            if(!products) return res.status(404).send({message: 'no existen los productos'})
+            
+            res.status(200).send({products});
+        });
+    }else {
+        Product.find({stock:{$gt: 0}},(err,products)=>{
+            if(err) return res.status(500).send({message: `error al realziar la peticion${err}`})
+            if(!products) return res.status(404).send({message: 'no existen los productos'})
+            res.status(200).send({products})
+        });
+    }
+});
 
 mongoose.connect('mongodb://localhost:27017/shop',(err,res)=>{
     if (err){
