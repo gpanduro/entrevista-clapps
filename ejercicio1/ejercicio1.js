@@ -1,3 +1,5 @@
+let contadorDomingos=0;
+let arrayDeMeses=[]; // arrayDeMeses --> array de objetos ListaDiasPorMes que conforman el orden de dias de 1900
 
 /* array donde cada valor es la cantidad de dias que pasaron hasta el inicio de cada mes,
    el [0] es solo para que arranque, el orden de meses desde [1] al [12] */
@@ -33,7 +35,6 @@ class ListaDiasPorMes{
         this.dia((((diasHastaInicioDeMes[this.idMes]+6)%7)%7),0);
     }
 }
-// arrayDeMeses --> array de objetos ListaDiasPorMes que conforman el orden de dias de 1900
 
 
 /* primerDiaDelMesDeAnho da el valor del dia de la semana en que inicio el mes,
@@ -42,13 +43,11 @@ const primerDiaDelMesDeAnho = (anho,mes) =>{
     let anhoBase=anho-1900;
   if(mes<3){
       let dia = ((Math.ceil(anhoBase/4)-1)+anhoBase+1)% 7; 
-     // console.log(arrayDeMeses[mes].diaSemana[dia]);
       if(arrayDeMeses[mes].diaSemana[dia]===0){ 
           contadorDomingos++;
       }
   }else{
       let dia1=((Math.floor(anhoBase/4))+anhoBase+1)% 7;
-      //console.log(arrayDeMeses[mes].diaSemana[dia1]);
 
       if(arrayDeMeses[mes].diaSemana[dia1]===0){ 
           contadorDomingos++;
@@ -58,12 +57,7 @@ const primerDiaDelMesDeAnho = (anho,mes) =>{
 
 
 const main = () =>{
-   
-    let contadorDomingos=0;
-    
-    // arrayDeMeses --> array de objetos ListaDiasPorMes que conforman el orden de dias de 1900
-    let arrayDeMeses=[];
-   
+          
     for(let mes=1;mes<13;mes++){
         arrayDeMeses[mes]=new ListaDiasPorMes(mes);
         arrayDeMeses[mes].asignacionDeKeysDias();
@@ -72,13 +66,12 @@ const main = () =>{
     let limiteMeses=13;
     let limiteXX=2001;
     for(let ahoInicial=1901;ahoInicial<limiteXX;ahoInicial++){
-    for(let meses=1;meses<limiteMeses;meses++){
+        for(let meses=1;meses<limiteMeses;meses++){
         primerDiaDelMesDeAnho(ahoInicial,meses);
+        }
     }
-    
     console.log('¿Cuántos domingos cayeron el primer día del mes durante el siglo XX ?');
     console.log(contadorDomingos+' Domingos.');
-    }
     
 }
 
