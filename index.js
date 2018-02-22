@@ -11,6 +11,8 @@ const port = process.env.PORT || 3000
 app.use(bodyParser.urlencoded({ extended:false}))
 app.use(bodyParser.json())
 
+
+//GET
 app.get('/api/product',(req,res)=>{
     Product.find({},(err,products)=>{
         if(err) return res.status(500).send({message: `error al realziar la peticion${err}`})
@@ -33,6 +35,7 @@ app.get('/api/product/:productId',(req,res)=>{
 
 })
 
+//POST
 app.post('/api/product',(req,res)=>{
     console.log('POST /api/product')
     console.log(req.body)
@@ -47,6 +50,7 @@ app.post('/api/product',(req,res)=>{
     })
 })
 
+//PUT
 app.put('/api/product/:productId',(req,res)=>{
     let productId = req.params.productId
     let update = req.body
@@ -58,6 +62,7 @@ app.put('/api/product/:productId',(req,res)=>{
     })
 })
 
+//DELETE
 app.delete('/api/product/:productId',(req,res)=>{
     let productId=req.params.productId 
     Product.findById(productId,(err,product)=>{
