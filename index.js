@@ -4,110 +4,34 @@ const express = require ('express')
 const bodyParser = require ('body-parser')
 const mongoose = require('mongoose')
 
-const Product = require('./models/product')
 const app = express()
 const port = process.env.PORT || 3000
+
+const ProductCrtl=require('./controllers')
 
 app.use(bodyParser.urlencoded({ extended:false}))
 app.use(bodyParser.json())
 
 //GET
-app.get('/api/product/:productId',(req,res)=>{
-    let productId = req.params.productId
-    
-    Product.findById(productId,(err,product)=>{
-        if(err) return res.status(500).send({message:  `error al realziar la peticion${err}`})
-        if(!product) return res.status(404).send({message: 'el producto no existe'})
-
-        res.status(200).send({product})
-    })
-})
+app.get('/api/product/:productId',ProductCrtl.getProduct)
 
 //POST
-app.post('/api/product',(req,res)=>{
-    console.log('POST /api/product')
-    console.log(req.body)
-
-    let product = new Product()
-    product.name = req.body.name
-    product.stock = req.body.stock
-
-    product.save((err,productStored)=>{
-        if(err) res.status(500).send({message:`Error al guardar la BD ${err}`})
-        res.status(200).send({product: productStored})
-    })
-})
+app.post('/api/product',ProductCrtl.saveProduct)
 
 //PUT
-app.put('/api/product/:productId',(req,res)=>{
-    let productId = req.params.productId
-    let update = req.body
-    
-    Product.findByIdAndUpdate(productId,update,(err,producUpdated)=>{
-        if(err) res.status(500).send({message:`Error al actualizar producto de la BD ${err}`})
-
-        res.status(200).send({product: producUpdated})
-    })
-})
+app.put('/api/product/:productId',ProductCrtl.updateProduct)
 
 //PUT
-app.put('/api/product', (req, res)=>{
-    const  id = req.query.id;
-    const increment = JSON.parse(req.query.increment);
-    let modifyStock = null;
-
-    increment ? modifyStock = 1 : modifyStock = -1;
-
-    Product.update({_id: id}, {$inc: { stock: modifyStock }}, (err, producUpdated)=>{
-        if(err) res.status(500).send({message:`Error al actualizar stock del producto de la BD ${err}`})
-
-        res.status(200).send({product: producUpdated})
-    });
-});
+app.put('/api/product',ProductCrtl.updateStock)
 
 //DELETE
-app.delete('/api/product/:productId',(req,res)=>{
-    let productId=req.params.productId 
-    Product.findById(productId,(err,product)=>{
-        if(err) res.status(500).send({message: `Error al borrar producto de la BD ${err}`})
-
-        product.remove(err =>{
-            if(err) res.status(500).send({message:`Error al borrar el producto de la BD ${err}`})
-    
-        })
-        res.status(200).send({message:'el producto fue eliminado'})
-    })
-})
+app.delete('/api/product/:productId',ProductCrtl.deleteProduct)
 
 //GET
-app.get('/api/products/sinstock',(req,res)=>{
-    
-    Product.find({stock:{$eq: 0}},(err,products)=>{
-        if(err) return res.status(500).send({message: `error al realziar la peticion${err}`})
-        if(!products) return res.status(404).send({message: 'no existen los productos'})
-        res.status(200).send({products})
-    });
-});
+app.get('/api/products/sinstock',ProductCrtl.getProductSinStock)
 
 //GET
-app.get('/api/products',(req,res)=>{
-    const sortCriteria = req.query.criteria;
-
-    if(sortCriteria){
-        Product.find({stock:{$gt: 0}}).sort({ stock: sortCriteria }).exec((err, products)=>{
-            if(err) return res.status(500).send({message: `error al realizar la peticion${err}`})
-            if(!products) return res.status(404).send({message: 'no existen los productos'})
-            
-            res.status(200).send({products});
-        });
-    }else {
-        Product.find({stock:{$gt: 0}},(err,products)=>{
-            if(err) return res.status(500).send({message: `error al realziar la peticion${err}`})
-            if(!products) return res.status(404).send({message: 'no existen los productos'})
-            res.status(200).send({products})
-        });
-    }
-});
+app.get('/api/products',ProductCrtl.getProductConStockOrdenado)
 
 mongoose.connect('mongodb://localhost:27017/shop',(err,res)=>{
     if (err){
