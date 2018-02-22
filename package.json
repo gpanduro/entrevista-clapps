@@ -1,0 +1,22 @@
+{
+  "name": "entrevista-clapps",
+  "version": "1.0.0",
+  "description": "ejercicio 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpanduro/entrevista-clapps.git"
+  },
+  "author": "giancarlo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gpanduro/entrevista-clapps/issues"
+  },
+  "homepage": "https://github.com/gpanduro/entrevista-clapps#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
