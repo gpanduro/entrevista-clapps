@@ -4,6 +4,7 @@ const express = require ('express')
 const bodyParser = require ('body-parser')
 const mongoose = require('mongoose')
 
+const Product = require('./models/product')
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -19,8 +20,17 @@ app.get('/api/product/:producId',(req,res)=>{
 })
 
 app.post('/api/product',(req,res)=>{
+    console.log('POST /api/product')
     console.log(req.body)
-    res.status(200).send({message: 'el producto se recibio'})
+
+    let product = new Product()
+    product.name = req.body.name
+    product.stock = req.body.stock
+
+    product.save((err,productStored)=>{
+        if(err) res.status(500).send({message:`Error al guardar la BD ${err}`})
+        res.status(200).send({product: productStored})
+    })
 })
 
 app.put('/api/product/:productId',(req,res)=>{
