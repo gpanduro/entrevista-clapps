@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000
 app.use(bodyParser.urlencoded({ extended:false}))
 app.use(bodyParser.json())
 
-app.get('/api/product',(req,red)=>{
+app.get('/api/product',(req,res)=>{
     Product.find({},(err,products)=>{
         if(err) return res.status(500).send({message: `error al realziar la peticion${err}`})
         if(!product) return res.status(404).send({message: 'no existen los productos'})
