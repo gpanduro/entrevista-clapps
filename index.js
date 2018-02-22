@@ -1,37 +1,8 @@
 'use strict'
 
-const express = require ('express')
-const bodyParser = require ('body-parser')
 const mongoose = require('mongoose')
-
-const app = express()
+const app=require('./app')
 const port = process.env.PORT || 3000
-
-const ProductCrtl=require('./controllers')
-
-app.use(bodyParser.urlencoded({ extended:false}))
-app.use(bodyParser.json())
-
-//GET
-app.get('/api/product/:productId',ProductCrtl.getProduct)
-
-//POST
-app.post('/api/product',ProductCrtl.saveProduct)
-
-//PUT
-app.put('/api/product/:productId',ProductCrtl.updateProduct)
-
-//PUT
-app.put('/api/product',ProductCrtl.updateStock)
-
-//DELETE
-app.delete('/api/product/:productId',ProductCrtl.deleteProduct)
-
-//GET
-app.get('/api/products/sinstock',ProductCrtl.getProductSinStock)
-
-//GET
-app.get('/api/products',ProductCrtl.getProductConStockOrdenado)
 
 mongoose.connect('mongodb://localhost:27017/shop',(err,res)=>{
     if (err){

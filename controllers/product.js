@@ -1,5 +1,5 @@
 'use strict'
-const Product = require('./models/product')
+const Product = require('../models/product')
 
 
 const getProduct=(req,res)=>{
@@ -96,7 +96,7 @@ const saveProduct=(req,res)=>{
 
 }
 
-exports={
+module.exports={
     getProduct,
     getProductSinStock,
     getProductConStockOrdenado,
